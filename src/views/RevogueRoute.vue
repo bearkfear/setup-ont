@@ -27,7 +27,6 @@
             required
             pattern="[0-9]|1[0-8]"
             placeholder="Verifique o Slot. De 0 a 18."
-            disabled
           />
           <span class="px-1">/</span>
           <input
@@ -59,15 +58,23 @@
       </div>
     </div>
     <hr class="dropdown-divider" />
-    <div class="mb-4">
+    <div
+      class="mb-4"
+      v-if="
+        String(slot).length > 0 &&
+        String(porta).length > 0 &&
+        String(ont).length > 0
+      "
+    >
       <article class="message is-info">
         <div class="message-header">
           <p>Código gerado</p>
+          <button class="button is-success" @click="copyText">Copiar</button>
         </div>
         <div class="message-body m-0 p-0">
-          <pre class="is-size-6" style="background-color: transparent">
-          {{ codeGenerated }}
-          </pre>
+          <pre class="is-size-6" style="background-color: transparent">{{
+            codeGenerated
+          }}</pre>
         </div>
       </article>
     </div>
@@ -82,17 +89,17 @@ const porta = ref("");
 const ont = ref("");
 
 const codeGenerated = computed(() => {
-  return `
-        undo interactive
-        undo service-port port 0/${slot.value}/${porta.value} ont ${ont.value}
-        interface gpon 0/${slot.value}
-        ont delete ${porta.value} ${ont.value}
-        quit
-        save
-    `
-    .split("        ")
-    .join("")
-    .trim();
+  return `undo interactive
+undo service-port port 0/${slot.value}/${porta.value} ont ${ont.value}
+interface gpon 0/${slot.value}
+ont delete ${porta.value} ${ont.value}
+quit
+save`;
 });
+
+const copyText = async () => {
+  await navigator.clipboard.writeText(codeGenerated.value);
+  alert("código copiado");
+};
 </script>
 <style lang="scss"></style>

@@ -90,15 +90,25 @@
       </div>
     </div>
     <hr class="dropdown-divider" />
-    <div class="mb-4">
+    <div
+      class="mb-4"
+      v-if="
+        String(slot).length > 0 &&
+        String(porta).length > 0 &&
+        String(serie).length > 0 &&
+        String(nome).length > 0 &&
+        String(ont).length > 0
+      "
+    >
       <article class="message is-info">
         <div class="message-header">
           <p>Código gerado</p>
+          <button class="button is-success" @click="copyText">Copiar</button>
         </div>
         <div class="message-body m-0 p-0">
-          <pre class="is-size-6" style="background-color: transparent">
-          {{ codeGenerated }}
-          </pre>
+          <pre class="is-size-6" style="background-color: transparent">{{
+            codeGenerated
+          }}</pre>
         </div>
       </article>
     </div>
@@ -115,16 +125,17 @@ const nome = ref("");
 const ont = ref("");
 
 const codeGenerated = computed(() => {
-  return `
-    interface gpon 0/${slot.value}
-    ont add ${porta.value} ${ont.value} sn-auth ${serie.value} omci ont-lineprofile-id 1 ont-srvprofile-id 1 desc ${nome.value}
-    ont port native-vlan ${porta.value} ${ont.value} eth 1 vlan 100 priority 0
-    quit
-    service-port vlan 100 gpon 0/${slot.value}/${porta.value} ont ${ont.value} gemport 1 multi-service user-vlan 100 tag-transform translate
-    save
-`
-    .split("    ")
-    .join("");
+  return `interface gpon 0/${slot.value}
+ont add ${porta.value} ${ont.value} sn-auth ${serie.value} omci ont-lineprofile-id 1 ont-srvprofile-id 1 desc ${nome.value}
+ont port native-vlan ${porta.value} ${ont.value} eth 1 vlan 100 priority 0
+quit
+service-port vlan 100 gpon 0/${slot.value}/${porta.value} ont ${ont.value} gemport 1 multi-service user-vlan 100 tag-transform translate
+save`;
 });
+
+const copyText = () => {
+  navigator.clipboard.writeText(codeGenerated.value);
+  alert("código copiado");
+};
 </script>
 <style lang="scss"></style>

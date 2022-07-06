@@ -2,7 +2,11 @@
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="https://bulma.io">
-        <img src="../assets/logo.png" height="400" />
+        <img
+          src="../assets/logo.png"
+          style="object-fit: cover; min-height: 45px"
+          height="500"
+        />
       </a>
 
       <a
